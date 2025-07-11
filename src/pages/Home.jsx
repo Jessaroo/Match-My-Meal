@@ -3,40 +3,47 @@ import PantryManager from '../components/PantryManager';
 import RecipeCard from '../components/RecipeCard';
 import { searchRecipesByIngredients } from '../services/mealdbAPI';
 
-// Component set up.
 const Home = () => {
-  // State to hold pantry ingredients entered by user
   const [pantry, setPantry] = useState([]);
-  // State to hold list of recipes fetched from API
   const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(false);  
 
-  // Recipe search: function to fetch recipes 
-  const handleSearch = async () => {
-    const results = await searchRecipesByIngredients(pantry);
+  const handleSearch = async (ingredients) => {
+    setPantry(ingredients);
+    setLoading(true);           
+    const results = await searchRecipesByIngredients(ingredients);
     setRecipes(results);
+    setLoading(false);          
   };
 
-  // Render the UI.
   return (
-    <div className="home-page">
+  <div className="home-page">
+    <div className="page-container">
+      <section className="intro-section">
+        <h2>Welcome to Match My Meal</h2>
+        <p>
+            Enter the ingredients you already have in your kitchen, and we'll help you find matching recipes!
+            Just type ingredients like <em>chicken, rice, broccoli</em> and hit search. Save your favorites to access them later.
+        </p>
+      </section>
+
       <h1>Match My Meal</h1>
 
-      {/* Pantry manager logic */}
-      <PantryManager 
-        pantry={pantry} 
-        setPantry={setPantry} 
-        onSearch={handleSearch} 
+      <PantryManager
+        setPantry={setPantry}
+        onSearch={handleSearch}
       />
 
-      {/* The recipe results */}
       <h2>Matching Recipes:</h2>
       <div className="recipe-list">
-        {recipes.length > 0 ? (
+        {loading ? (
+          <p>Searching recipes...</p>
+        ) : recipes.length > 0 ? (
           recipes.map(recipe => (
-            <RecipeCard 
-              key={recipe.idMeal} 
-              recipe={recipe} 
-              pantry={pantry} 
+            <RecipeCard
+              key={recipe.idMeal}
+              recipe={recipe}
+              pantry={pantry}
             />
           ))
         ) : (
@@ -44,6 +51,7 @@ const Home = () => {
         )}
       </div>
     </div>
+  </div>
   );
 };
 

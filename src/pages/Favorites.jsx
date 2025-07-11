@@ -3,12 +3,17 @@ import RecipeCard from '../components/RecipeCard';
 import { getFavorites, deleteFavorite } from '../services/jsonServerAPI';
 
 const Favorites = ({ favorites, setFavorites, pantry }) => {
-
-  // Load favorites 
+  // Load favorites and deduplicate by idMeal
   useEffect(() => {
     async function fetchFavorites() {
       const data = await getFavorites();
-      setFavorites(data);
+
+      // Deduplicate by idMeal
+      const uniqueFavorites = Array.from(
+        new Map(data.map(item => [item.idMeal, item])).values()
+      );
+
+      setFavorites(uniqueFavorites);
     }
     fetchFavorites();
   }, [setFavorites]);
@@ -21,7 +26,8 @@ const Favorites = ({ favorites, setFavorites, pantry }) => {
   };
 
   return (
-    <div className="favorites-page">
+  <div className="favorites-page">
+    <div className="page-container">
       <h1>Your Favorite Recipes</h1>
 
       {favorites.length === 0 ? (
@@ -29,20 +35,11 @@ const Favorites = ({ favorites, setFavorites, pantry }) => {
       ) : (
         <div className="favorites-list">
           {favorites.map(recipe => (
-            <div key={recipe.idMeal} style={{ position: 'relative' }}>
+            <div key={recipe.idMeal} className="favorites-item">
               <RecipeCard recipe={recipe} pantry={pantry} />
               <button
                 onClick={() => handleRemove(recipe.idMeal)}
-                style={{
-                  position: 'absolute',
-                  top: '10px',
-                  right: '10px',
-                  backgroundColor: 'red',
-                  color: 'white',
-                  border: 'none',
-                  padding: '5px 10px',
-                  cursor: 'pointer'
-                }}
+                className="remove-btn"
               >
                 Remove
               </button>
@@ -51,6 +48,7 @@ const Favorites = ({ favorites, setFavorites, pantry }) => {
         </div>
       )}
     </div>
+  </div>  
   );
 };
 
