@@ -1,3 +1,12 @@
+## 🖌️ UX Design Process
+
+This project began with wireframing to map out key user flows and structure. Below are early wireframes created to guide development:
+
+- [Home Page Wireframe](/details/wireframe-home.jpg)
+- [Recipe Detail Page Wireframe](/details/wireframe-details.jpg)
+- [Favorites Page Wireframe](/details/wireframe-favorites.jpg)
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
