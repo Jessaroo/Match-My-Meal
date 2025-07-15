@@ -2,9 +2,9 @@
 
 This project began with wireframing to map out key user flows and structure. Below are early wireframes created to guide development:
 
-- [Home Page Wireframe](/details/wireframe-home.jpg)
-- [Recipe Detail Page Wireframe](/details/wireframe-details.jpg)
-- [Favorites Page Wireframe](/details/wireframe-favorites.jpg)
+- [Home Page Wireframe](/design/wireframe-home.jpg)
+- [Recipe Detail Page Wireframe](/design/wireframe-details.jpg)
+- [Favorites Page Wireframe](/design/wireframe-favorites.jpg)
 
 
 # Getting Started with Create React App
