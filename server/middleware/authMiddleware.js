@@ -4,7 +4,6 @@ require('dotenv').config();
 function verifyToken(req, res, next) {
   const authHeader = req.headers['authorization'];
 
-  // JWT is usually sent as: Authorization: Bearer <token>
   const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
@@ -13,8 +12,8 @@ function verifyToken(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // store user info in req.user
-    next(); // move to next middleware or route handler
+    req.user = decoded; 
+    next(); 
   } catch (err) {
     return res.status(403).json({ message: 'Invalid or expired token.' });
   }
