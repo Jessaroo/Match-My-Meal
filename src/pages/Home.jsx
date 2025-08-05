@@ -28,13 +28,13 @@ const Home = () => {
           </p>
 
           {/* ✅ Show login/register if user is not logged in */}
-          {!localStorage.getItem('token') && (
+          {/* {!localStorage.getItem('token') && ( */}
             <p>
               <strong>New here?</strong>{' '}
               <Link to="/register">Create an account</Link> or{' '}
               <Link to="/login">log in</Link> to start saving your favorite meals!
             </p>
-          )}
+          {/* )} */}
         </section>
 
         {/* Begin new section with side images */}
