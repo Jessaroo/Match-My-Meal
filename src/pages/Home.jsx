@@ -27,14 +27,14 @@ const Home = () => {
             Just type ingredients like <em>chicken, rice, broccoli</em> and hit search. Save your favorites to access them later.
           </p>
 
-          {/* ✅ Show login/register if user is not logged in */}
-          {/* {!localStorage.getItem('token') && ( */}
+          {/*Show login/register if user is not logged in */}
+          {!localStorage.getItem('token') && (
             <p>
               <strong>New here?</strong>{' '}
               <Link to="/register">Create an account</Link> or{' '}
               <Link to="/login">log in</Link> to start saving your favorite meals!
             </p>
-          {/* )} */}
+          )}
         </section>
 
         {/* Begin new section with side images */}
