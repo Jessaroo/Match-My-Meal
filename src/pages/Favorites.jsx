@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import RecipeCard from '../components/RecipeCard';
-import { getFavorites, deleteFavorite } from '../services/jsonServerAPI';
+import { getFavorites, deleteFavorite } from '../services/favoriteAPI';
 
 const Favorites = ({ favorites, setFavorites, pantry }) => {
   // Load favorites and deduplicate by idMeal

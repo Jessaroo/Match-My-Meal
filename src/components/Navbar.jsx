@@ -1,22 +1,34 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
-  const isHome = location.pathname === '/';
-  const isRecipe = location.pathname.startsWith('/recipe');
-  const isFavorites = location.pathname === '/favorites';
+  const isLoggedIn = !!localStorage.getItem('token');
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
 
   return (
     <nav className="navbar">
-      {isHome && (
-        <Link to="/favorites" className="nav-link">Favorites</Link>
-      )}
-      {(isRecipe || isFavorites) && (
-        <div className="nav-links-group">
-          <Link to="/" className="nav-link">Home</Link>
+      <Link to="/" className="nav-link">Home</Link>
+
+      {isLoggedIn && (
+        <>
           <Link to="/favorites" className="nav-link">Favorites</Link>
+          <button className="nav-link" onClick={handleLogout} style={{ marginLeft: 'auto' }}>
+            Logout
+          </button>
+        </>
+      )}
+
+      {!isLoggedIn && (
+        <div style={{ marginLeft: 'auto' }}>
+          <Link to="/login" className="nav-link">Login</Link>
+          <Link to="/register" className="nav-link">Register</Link>
         </div>
       )}
     </nav>

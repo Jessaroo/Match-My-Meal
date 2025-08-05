@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getRecipeById } from '../services/mealdbAPI';
-import { addFavorite, deleteFavorite } from '../services/jsonServerAPI';
+import { addFavorite, deleteFavorite } from '../services/favoriteAPI';
 
 const RecipeDetail = ({ pantry = [], favorites = [], setFavorites }) => {
   const { id } = useParams();
