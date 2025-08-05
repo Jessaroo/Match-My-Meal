@@ -39,6 +39,7 @@ const RecipeDetail = ({ pantry = [], favorites = [], setFavorites }) => {
 
   // ✅ Add to favorites with token
   const handleAddFavorite = async () => {
+    console.log("Add to favorites clicked");
     try {
       const token = localStorage.getItem('token');
       const res = await axios.post('http://localhost:5000/api/favorites', recipe, {
