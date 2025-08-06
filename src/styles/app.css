@@ -23,6 +23,26 @@
   gap: 20px;
 }
 
+.nav-left,
+.nav-right {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  color: #080606;
+  font-size: 1rem;
+}
+
+.logout-btn:hover {
+  color: #044a79;
+}
+
 .home-page {
   background-color: #848585;  
   min-height: 100vh;          
