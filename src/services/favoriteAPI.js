@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/favorites';
+const API_URL = 'https://match-my-meal-backend.onrender.com/api/favorites';
 
 const getAuthHeader = () => ({
   headers: {

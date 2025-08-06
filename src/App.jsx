@@ -14,7 +14,7 @@ function App() {
   const [favorites, setFavorites] = useState([]);
   const [pantry, setPantry] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(
-    !!localStorage.getItem('token') // Checks if token exists at startup
+    !!localStorage.getItem('token') 
   );
 
   useEffect(() => {
@@ -58,3 +58,40 @@ function App() {
 }
 
 export default App;
+
+
+
+
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+
+// function App() {
+//   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+//   useEffect(() => {
+//     const token = localStorage.getItem("token");
+//     setIsAuthenticated(!!token); // true if token exists
+//   }, []);
+
+//   const handleLogout = () => {
+//     localStorage.removeItem("token");
+//     setIsAuthenticated(false);
+//   };
+
+//   return (
+//     <nav>
+//       {isAuthenticated ? (
+//         <>
+//           <button onClick={handleLogout}>Logout</button>
+//         </>
+//       ) : (
+//         <>
+//           <Link to="/login">Login</Link>
+//           <Link to="/register">Register</Link>
+//         </>
+//       )}
+//     </nav>
+//   );
+// }
+
+// export default App;
