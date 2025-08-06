@@ -1,7 +1,8 @@
 // src/pages/Login.jsx
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // ✅ include Link here
+import { useNavigate, Link } from 'react-router-dom'; 
 import axios from 'axios';
+import { response } from 'express';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -17,8 +18,8 @@ const Login = () => {
     setError('');
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', form);
-      localStorage.setItem('token', res.data.token);
+      const response = await axios.post('http://localhost:5000/api/auth/login', form);
+      localStorage.setItem('token', response.data.token);
       navigate('/favorites');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
