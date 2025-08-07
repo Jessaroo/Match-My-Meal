@@ -1,6 +1,6 @@
 import React from 'react';
 import RecipeCard from './RecipeCard';
-import { deleteFavorite } from '../services/jsonServerAPI';
+import { deleteFavorite } from '../services/favoriteAPI';
 
 const FavoritesList = ({ favorites, setFavorites, pantry }) => {
   const handleRemove = async (idMeal) => {
