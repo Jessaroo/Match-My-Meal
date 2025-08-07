@@ -1,5 +1,3 @@
-// src/services/authAPI.js
-
 const API_URL = 'https://match-my-meal-backend.onrender.com/api/auth';
 
 export const registerUser = async (userData) => {
