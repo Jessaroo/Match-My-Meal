@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getRecipeById } from '../services/mealdbAPI';
-import axios from 'axios'; // ✅ Add this
+import axios from 'axios'; 
 
 const RecipeDetail = ({ pantry = [], favorites = [], setFavorites }) => {
   const { id } = useParams();
@@ -37,12 +37,13 @@ const RecipeDetail = ({ pantry = [], favorites = [], setFavorites }) => {
 
   const isFavorite = favorites.some((fav) => fav.idMeal === recipe?.idMeal);
 
-  // ✅ Add to favorites with token
+  const backendURL = 'https://match-my-meal-backend.onrender.com';
+
+  // Add to favorites
   const handleAddFavorite = async () => {
-    console.log("Add to favorites clicked");
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.post('http://localhost:5000/api/favorites', recipe, {
+      const res = await axios.post(`${backendURL}/api/favorites`, recipe, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -53,11 +54,11 @@ const RecipeDetail = ({ pantry = [], favorites = [], setFavorites }) => {
     }
   };
 
-  // ✅ Remove favorite with token
+  // Remove favorite
   const handleRemoveFavorite = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/favorites/${recipe.idMeal}`, {
+      await axios.delete(`${backendURL}/api/favorites/${recipe.idMeal}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -78,7 +79,6 @@ const RecipeDetail = ({ pantry = [], favorites = [], setFavorites }) => {
       <div className="recipe-detail">
         <button onClick={() => navigate(-1)}>← Back</button>
 
-        {/* Grouped section */}
         <div className="recipe-header">
           <h1>{recipe.strMeal}</h1>
           <img

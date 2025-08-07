@@ -1,4 +1,3 @@
-// src/pages/Register.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -17,7 +16,8 @@ const Register = () => {
     setError('');
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/register', form);
+      const backendURL = 'https://match-my-meal-backend.onrender.com';
+      const res = await axios.post(`${backendURL}/api/auth/register`, form);
       alert('✅ Registered successfully! Please log in.');
       navigate('/login');
     } catch (err) {

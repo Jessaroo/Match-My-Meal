@@ -1,8 +1,6 @@
-// src/pages/Login.jsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom'; 
 import axios from 'axios';
-import { response } from 'express';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -18,7 +16,7 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', form);
+      const response = await axios.post('https://match-my-meal-backend.onrender.com/api/auth/login', form);
       localStorage.setItem('token', response.data.token);
       navigate('/favorites');
     } catch (err) {
@@ -53,7 +51,6 @@ const Login = () => {
         <button type="submit">Login</button>
       </form>
 
-      {/* ✅ Add this after the form */}
       <p style={{ marginTop: '10px' }}>
         Don’t have an account? <Link to="/register">Register here</Link>
       </p>
