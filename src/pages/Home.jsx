@@ -4,7 +4,6 @@ import PantryManager from '../components/PantryManager';
 import RecipeCard from '../components/RecipeCard';
 import { searchRecipesByIngredients } from '../services/mealdbAPI';
 
-console.log('TOKEN:', localStorage.getItem('token'));
 
 const Home = () => {
   const [pantry, setPantry] = useState([]);
