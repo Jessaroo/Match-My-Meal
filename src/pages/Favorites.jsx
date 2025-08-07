@@ -8,7 +8,7 @@ const Favorites = ({ favorites, setFavorites, pantry }) => {
     async function fetchFavorites() {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/favorites', {
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/favorites`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -32,7 +32,7 @@ const Favorites = ({ favorites, setFavorites, pantry }) => {
   const handleRemove = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/favorites/${id}`, {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/favorites/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -73,6 +73,7 @@ const Favorites = ({ favorites, setFavorites, pantry }) => {
 };
 
 export default Favorites;
+
 
 
 // import React, { useEffect } from 'react';
