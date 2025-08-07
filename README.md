@@ -9,6 +9,8 @@ This project began with wireframing to map out key user flows and structure. Bel
 
 # Getting Started with Create React App
 
+Click here to visit the website: https://matchmymeal.netlify.app/
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
