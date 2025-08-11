@@ -28,7 +28,6 @@ const Home = () => {
             Just type ingredients like <em>chicken, rice, broccoli</em> and hit search. Save your favorites to access them later.
           </p>
 
-          {/*Show login/register if user is not logged in */}
           {!localStorage.getItem('token') && (
             <p>
               <strong>New here?</strong>{' '}
@@ -38,7 +37,6 @@ const Home = () => {
           )}
         </section>
 
-        {/* Begin new section with side images */}
         <div className="section-with-images">
           <img
             src="/images/left-image.jpg"
