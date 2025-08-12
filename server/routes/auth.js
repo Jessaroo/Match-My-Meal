@@ -8,6 +8,7 @@ require('dotenv').config();
 
 // Helper function to create a new MySQL connection
 async function getConnection() {
+  console.log('Creating DB connection...');
   return mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -20,8 +21,10 @@ async function getConnection() {
 // Register a new user
 router.post('/register', async (req, res) => {
   const { username, password } = req.body;
+  console.log('Register request:', { username });
 
   if (!username || !password) {
+    console.log('Missing username or password');
     return res.status(400).json({ message: 'Username and password are required.' });
   }
 
@@ -30,27 +33,34 @@ router.post('/register', async (req, res) => {
     connection = await getConnection();
 
     const [existing] = await connection.execute('SELECT * FROM users WHERE username = ?', [username]);
+    console.log('Existing users found:', existing.length);
     if (existing.length > 0) {
       return res.status(400).json({ message: 'Username already taken.' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     await connection.execute('INSERT INTO users (username, password) VALUES (?, ?)', [username, hashedPassword]);
+    console.log('User registered:', username);
 
     res.status(201).json({ message: 'User registered successfully.' });
   } catch (err) {
-    console.error(err);
+    console.error('Register error:', err);
     res.status(500).json({ message: 'Server error.' });
   } finally {
-    if (connection) await connection.end();
+    if (connection) {
+      console.log('Closing DB connection (register)');
+      await connection.end();
+    }
   }
 });
 
 // Login user
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
+  console.log('Login request:', { username });
 
   if (!username || !password) {
+    console.log('Missing username or password');
     return res.status(400).json({ message: 'Username and password are required.' });
   }
 
@@ -60,10 +70,13 @@ router.post('/login', async (req, res) => {
 
     const [userResult] = await connection.execute('SELECT * FROM users WHERE username = ?', [username]);
     const user = userResult[0];
+    console.log('User found:', !!user);
 
     if (!user) return res.status(401).json({ message: 'Invalid credentials.' });
 
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log('Password match:', isMatch);
+
     if (!isMatch) return res.status(401).json({ message: 'Invalid credentials.' });
 
     const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, {
@@ -72,69 +85,17 @@ router.post('/login', async (req, res) => {
 
     res.json({ token });
   } catch (err) {
-    console.error(err);
+    console.error('Login error:', err);
     res.status(500).json({ message: 'Server error.' });
   } finally {
-    if (connection) await connection.end();
+    if (connection) {
+      console.log('Closing DB connection (login)');
+      await connection.end();
+    }
   }
 });
 
-// GET /api/auth/users — List all users (protected)
-router.get('/users', verifyToken, async (req, res) => {
-  let connection;
-  try {
-    connection = await getConnection();
-
-    const [users] = await connection.execute('SELECT id, username FROM users');
-    res.json(users);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error retrieving users.' });
-  } finally {
-    if (connection) await connection.end();
-  }
-});
-
-// PUT /api/auth/users/:id — Update a user’s username (protected)
-router.put('/users/:id', verifyToken, async (req, res) => {
-  const { id } = req.params;
-  const { username } = req.body;
-
-  if (!username) {
-    return res.status(400).json({ message: 'Username is required.' });
-  }
-
-  let connection;
-  try {
-    connection = await getConnection();
-
-    await connection.execute('UPDATE users SET username = ? WHERE id = ?', [username, id]);
-    res.json({ message: 'Username updated successfully.' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error updating user.' });
-  } finally {
-    if (connection) await connection.end();
-  }
-});
-
-// DELETE /api/auth/users/:id — Delete a user (protected)
-router.delete('/users/:id', verifyToken, async (req, res) => {
-  const { id } = req.params;
-
-  let connection;
-  try {
-    connection = await getConnection();
-
-    await connection.execute('DELETE FROM users WHERE id = ?', [id]);
-    res.json({ message: 'User deleted successfully.' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error deleting user.' });
-  } finally {
-    if (connection) await connection.end();
-  }
-});
+// Similar console.logs can be added in the other routes if needed
 
 module.exports = router;
 
@@ -144,9 +105,20 @@ module.exports = router;
 // const router = express.Router();
 // const bcrypt = require('bcryptjs');
 // const jwt = require('jsonwebtoken');
-// const db = require('../db');
-// const verifyToken = require('../middleware/authMiddleware'); // ✅ Import middleware
+// const mysql = require('mysql2/promise');  // use promise-based API
+// const verifyToken = require('../middleware/authMiddleware'); // Import middleware
 // require('dotenv').config();
+
+// // Helper function to create a new MySQL connection
+// async function getConnection() {
+//   return mysql.createConnection({
+//     host: process.env.DB_HOST,
+//     user: process.env.DB_USER,
+//     password: process.env.DB_PASSWORD,
+//     database: process.env.DB_NAME,
+//     port: process.env.DB_PORT,
+//   });
+// }
 
 // // Register a new user
 // router.post('/register', async (req, res) => {
@@ -156,18 +128,24 @@ module.exports = router;
 //     return res.status(400).json({ message: 'Username and password are required.' });
 //   }
 
+//   let connection;
 //   try {
-//     const [existing] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
+//     connection = await getConnection();
+
+//     const [existing] = await connection.execute('SELECT * FROM users WHERE username = ?', [username]);
 //     if (existing.length > 0) {
 //       return res.status(400).json({ message: 'Username already taken.' });
 //     }
 
 //     const hashedPassword = await bcrypt.hash(password, 10);
-//     await db.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, hashedPassword]);
+//     await connection.execute('INSERT INTO users (username, password) VALUES (?, ?)', [username, hashedPassword]);
+
 //     res.status(201).json({ message: 'User registered successfully.' });
 //   } catch (err) {
 //     console.error(err);
 //     res.status(500).json({ message: 'Server error.' });
+//   } finally {
+//     if (connection) await connection.end();
 //   }
 // });
 
@@ -179,8 +157,11 @@ module.exports = router;
 //     return res.status(400).json({ message: 'Username and password are required.' });
 //   }
 
+//   let connection;
 //   try {
-//     const [userResult] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
+//     connection = await getConnection();
+
+//     const [userResult] = await connection.execute('SELECT * FROM users WHERE username = ?', [username]);
 //     const user = userResult[0];
 
 //     if (!user) return res.status(401).json({ message: 'Invalid credentials.' });
@@ -196,22 +177,28 @@ module.exports = router;
 //   } catch (err) {
 //     console.error(err);
 //     res.status(500).json({ message: 'Server error.' });
+//   } finally {
+//     if (connection) await connection.end();
 //   }
 // });
 
-
-// // ✅ GET /api/auth/users — List all users (protected)
+// // GET /api/auth/users — List all users (protected)
 // router.get('/users', verifyToken, async (req, res) => {
+//   let connection;
 //   try {
-//     const [users] = await db.query('SELECT id, username FROM users');
+//     connection = await getConnection();
+
+//     const [users] = await connection.execute('SELECT id, username FROM users');
 //     res.json(users);
 //   } catch (err) {
 //     console.error(err);
 //     res.status(500).json({ message: 'Server error retrieving users.' });
+//   } finally {
+//     if (connection) await connection.end();
 //   }
 // });
 
-// // ✅ PUT /api/auth/users/:id — Update a user’s username (protected)
+// // PUT /api/auth/users/:id — Update a user’s username (protected)
 // router.put('/users/:id', verifyToken, async (req, res) => {
 //   const { id } = req.params;
 //   const { username } = req.body;
@@ -220,25 +207,35 @@ module.exports = router;
 //     return res.status(400).json({ message: 'Username is required.' });
 //   }
 
+//   let connection;
 //   try {
-//     await db.query('UPDATE users SET username = ? WHERE id = ?', [username, id]);
+//     connection = await getConnection();
+
+//     await connection.execute('UPDATE users SET username = ? WHERE id = ?', [username, id]);
 //     res.json({ message: 'Username updated successfully.' });
 //   } catch (err) {
 //     console.error(err);
 //     res.status(500).json({ message: 'Server error updating user.' });
+//   } finally {
+//     if (connection) await connection.end();
 //   }
 // });
 
-// // ✅ DELETE /api/auth/users/:id — Delete a user (protected)
+// // DELETE /api/auth/users/:id — Delete a user (protected)
 // router.delete('/users/:id', verifyToken, async (req, res) => {
 //   const { id } = req.params;
 
+//   let connection;
 //   try {
-//     await db.query('DELETE FROM users WHERE id = ?', [id]);
+//     connection = await getConnection();
+
+//     await connection.execute('DELETE FROM users WHERE id = ?', [id]);
 //     res.json({ message: 'User deleted successfully.' });
 //   } catch (err) {
 //     console.error(err);
 //     res.status(500).json({ message: 'Server error deleting user.' });
+//   } finally {
+//     if (connection) await connection.end();
 //   }
 // });
 
